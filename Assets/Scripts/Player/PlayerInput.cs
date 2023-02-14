@@ -62,16 +62,26 @@ public class PlayerInput : MonoBehaviour
 
     private void InteractWithObject()
     {
-        var point = new Vector3(_camera.pixelWidth / 2, _camera.pixelHeight / 2, 0);
-        var ray = _camera.ScreenPointToRay(point);
+        GameObject currentObject = ThrowRay();
 
-        if (Physics.Raycast(ray, out var hit, _interactRange))
+        if(currentObject != null)
         {
-            InteractableObject interactObject = hit.transform.GetComponent<InteractableObject>();
+            InteractableObject interactObject = currentObject.transform.GetComponent<InteractableObject>();
             if (interactObject != null)
                 if (interactObject.Interactable)
                     interactObject.Interact(gameObject);
         }
+    }
+
+    public GameObject ThrowRay()
+    {
+        var point = new Vector3(_camera.pixelWidth / 2, _camera.pixelHeight / 2, 0);
+        var ray = _camera.ScreenPointToRay(point);
+
+        if (Physics.Raycast(ray, out var hit, _interactRange))
+            return hit.transform.gameObject;
+        else
+            return null;
     }
 
     private void OnEnable()
